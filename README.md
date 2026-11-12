@@ -10,20 +10,20 @@ mic    → browser speech recognition → text  ┴→ Claude → streamed text 
 
 It is a port of the idea in
 [cuppibla/live-vision-agent](https://github.com/cuppibla/live-vision-agent)
-(Google ADK + Gemini Live) to Claude. The interaction is the same; the plumbing
+(a Google ADK live agent) to Claude. The interaction is the same; the plumbing
 is not, because the two APIs are shaped differently.
 
-## ADK + Gemini Live → Anthropic SDK
+## ADK → Anthropic SDK
 
 | | ADK original | This repo |
 |---|---|---|
-| Talking agent | `Agent(model="gemini-…-live")` in a `run_live` session | `client.beta.messages.stream()` on `claude-opus-5-5`, one call per turn |
+| Talking agent | an ADK `Agent` in a `run_live` session | `client.beta.messages.stream()` on `claude-opus-5-5`, one call per turn |
 | Transport | one WebSocket, `LiveRequestQueue` | plain HTTP: `POST /turn` returns an NDJSON stream |
 | A frame | `types.Blob(data=jpeg, mime_type="image/jpeg")` | `{type: "image", source: {type: "base64", media_type: "image/jpeg", data}}` |
 | Voice in | 16 kHz PCM streamed to the model | the browser's `SpeechRecognition` → text |
 | Voice out | 24 kHz PCM from the model | the browser's `speechSynthesis`, sentence by sentence as text streams in |
 | Session state | in-memory ADK session | none on the server: the browser sends the text history each turn |
-| Watcher | `gemini-2.5-flash` + regex over the reply | `claude-haiku-5-5` + a JSON-schema structured output |
+| Watcher | a smaller model + regex over the reply | `claude-haiku-5-5` + a JSON-schema structured output |
 
 Two honest differences from the original:
 
