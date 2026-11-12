@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Eyes · Claude live vision agent</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #0e1013;
+        color: #f4f1ea;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      main {
+        max-width: 78rem;
+        margin: 0 auto;
+        padding: clamp(1rem, 3vw, 2.5rem);
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.4rem 1rem;
+        margin-bottom: 1rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+      }
+      header p {
+        margin: 0;
+        color: #98a0ab;
+        font-family: ui-monospace, monospace;
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Eyes</h1>
+        <p>one agent · voice + vision · Anthropic SDK</p>
+      </header>
+      <div id="root"></div>
+    </main>
+    <script type="module" src="/demo/main.tsx"></script>
+  </body>
+</html>

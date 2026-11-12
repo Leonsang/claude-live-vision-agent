@@ -1,0 +1,521 @@
+/* Live Vision — default skin.
+   Every colour, face and radius is a custom property on .lv, so a host can
+   re-skin the whole instrument without touching these rules. */
+
+.lv {
+  --lv-bg: #0e1013;
+  --lv-panel: #16191d;
+  --lv-sunk: #0a0c0e;
+  --lv-line: #2a2f36;
+  --lv-text: #f4f1ea;
+  --lv-muted: #98a0ab;
+  --lv-accent: #f0a43a;
+  --lv-accent-ink: #14110b;
+  --lv-live: #ff5a3c;
+  --lv-seen: #7fd18b;
+  --lv-radius: 2px;
+  --lv-font: ui-sans-serif, system-ui, sans-serif;
+  --lv-mono: ui-monospace, 'SFMono-Regular', monospace;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21rem;
+  gap: 1px;
+  background: var(--lv-line);
+  border: 1px solid var(--lv-line);
+  border-radius: var(--lv-radius);
+  color: var(--lv-text);
+  font-family: var(--lv-font);
+  overflow: hidden;
+}
+.lv *,
+.lv *::before,
+.lv *::after {
+  box-sizing: border-box;
+}
+.lv button,
+.lv input {
+  font: inherit;
+  color: inherit;
+}
+.lv button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+.lv :focus-visible {
+  outline: 2px solid var(--lv-accent);
+  outline-offset: 2px;
+}
+
+/* ───────── stage ───────── */
+.lv-stage {
+  background: var(--lv-bg);
+  min-width: 0;
+}
+.lv-viewfinder {
+  position: relative;
+  height: 100%;
+  min-height: 26rem;
+  background: var(--lv-sunk);
+  overflow: hidden;
+}
+.lv-viewfinder video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.lv-viewfinder.has-cam video {
+  opacity: 1;
+}
+.lv-nocam {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.4rem;
+  color: var(--lv-muted);
+}
+.lv-nocam svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.35rem;
+}
+.lv-nocam b {
+  color: var(--lv-text);
+  font-size: 1.05rem;
+}
+.lv-nocam small {
+  font-family: var(--lv-mono);
+  font-size: 0.75rem;
+}
+
+/* A sweep while streaming, a blink on a snapshot: the two patterns look different. */
+.lv-scan {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--lv-accent);
+  box-shadow: 0 0 18px 2px var(--lv-accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.lv-viewfinder[data-mode='stream'] .lv-scan {
+  opacity: 0.9;
+  animation: lv-scan 2.2s linear infinite;
+}
+@keyframes lv-scan {
+  from { transform: translateY(0); }
+  to { transform: translateY(min(70vh, 40rem)); }
+}
+.lv-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+.lv-flash.go {
+  animation: lv-flash 0.42s ease-out;
+}
+@keyframes lv-flash {
+  from { opacity: 0.55; }
+  to { opacity: 0; }
+}
+.lv-viewfinder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.15s;
+}
+.lv-viewfinder[data-mode='snapshot']::after,
+.lv-viewfinder[data-mode='stream']::after {
+  border-color: var(--lv-accent);
+}
+
+.lv-hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0.85rem;
+  pointer-events: none;
+}
+.lv-hud > * {
+  pointer-events: auto;
+}
+.lv-hud-top {
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.lv-hud-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.lv-hud-right {
+  flex-direction: column;
+  align-items: flex-end;
+}
+.lv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 1.9rem;
+  padding: 0 0.65rem;
+  background: rgb(10 12 14 / 0.82);
+  border: 1px solid var(--lv-line);
+  border-radius: var(--lv-radius);
+  font-family: var(--lv-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.lv-pill svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.lv button.lv-pill-btn {
+  background: rgb(10 12 14 / 0.82);
+  border: 1px solid var(--lv-line);
+}
+.lv button.lv-pill-btn:hover {
+  border-color: var(--lv-accent);
+  color: var(--lv-accent);
+}
+.lv-ghost {
+  color: var(--lv-muted);
+  text-transform: none;
+}
+.lv-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--lv-muted);
+}
+.lv-pill.live {
+  border-color: var(--lv-live);
+  color: var(--lv-live);
+}
+.lv-pill.live .lv-dot {
+  background: var(--lv-live);
+  animation: lv-pulse 1.2s ease-in-out infinite;
+}
+@keyframes lv-pulse {
+  50% { opacity: 0.25; }
+}
+.lv-thumb {
+  width: 6.5rem;
+  border: 1px solid var(--lv-accent);
+  border-radius: var(--lv-radius);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.lv-thumb.show {
+  opacity: 1;
+  transform: none;
+}
+
+.lv-hud-bottom {
+  bottom: 0;
+  padding-top: 3.5rem;
+  background: linear-gradient(transparent, rgb(6 8 10 / 0.9) 55%);
+}
+.lv-you {
+  margin: 0 0 0.35rem;
+  font-family: var(--lv-mono);
+  font-size: 0.8rem;
+  color: var(--lv-muted);
+}
+.lv-you::before {
+  content: '› ';
+  color: var(--lv-accent);
+}
+.lv-agent {
+  margin: 0;
+  max-width: 46ch;
+  font-size: clamp(1.1rem, 2.1vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.lv-agent.thinking {
+  color: var(--lv-muted);
+  font-weight: 500;
+}
+
+/* ───────── panel ───────── */
+.lv-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--lv-line);
+}
+.lv-panel > * {
+  background: var(--lv-panel);
+}
+.lv-modes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--lv-line);
+}
+.lv-mode {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 0.15rem;
+  padding: 1rem;
+  background: var(--lv-panel);
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+.lv-mode-hit {
+  display: grid;
+  justify-items: start;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+}
+.lv-mode svg {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.4rem;
+  color: var(--lv-accent);
+}
+.lv button.lv-mode:hover,
+.lv-mode-watch:hover {
+  background: var(--lv-sunk);
+}
+.lv button.lv-mode:active {
+  background: var(--lv-accent);
+  color: var(--lv-accent-ink);
+}
+.lv button.lv-mode:active svg {
+  color: inherit;
+}
+.lv-mode-watch.on {
+  background: var(--lv-accent);
+  color: var(--lv-accent-ink);
+}
+.lv-mode-watch.on svg {
+  color: inherit;
+}
+.lv-big {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.lv-small {
+  font-family: var(--lv-mono);
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.lv-fps {
+  display: flex;
+  gap: 1px;
+  margin-top: 0.6rem;
+  border: 1px solid currentColor;
+  border-radius: var(--lv-radius);
+  width: max-content;
+}
+.lv .lv-fps button {
+  width: 2rem;
+  height: 1.75rem;
+  font-family: var(--lv-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.lv .lv-fps button.on {
+  color: var(--lv-text);
+  background: var(--lv-sunk);
+}
+
+.lv-pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.85rem 1rem;
+}
+.lv-node {
+  font-family: var(--lv-mono);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid var(--lv-line);
+  border-radius: var(--lv-radius);
+  color: var(--lv-muted);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.lv-node + .lv-node {
+  position: relative;
+  margin-left: 0.7rem;
+}
+.lv-node + .lv-node::before {
+  content: '→';
+  position: absolute;
+  left: -0.85rem;
+  color: var(--lv-line);
+}
+.lv-node.lit {
+  background: var(--lv-accent);
+  border-color: var(--lv-accent);
+  color: var(--lv-accent-ink);
+}
+.lv-pipeline.stream .lv-node {
+  border-style: dashed;
+}
+
+.lv-watcher,
+.lv-say {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+}
+.lv-label {
+  grid-column: 1 / -1;
+  font-family: var(--lv-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lv-muted);
+}
+.lv input {
+  width: 100%;
+  min-width: 0;
+  height: 2.4rem;
+  padding: 0 0.7rem;
+  background: var(--lv-sunk);
+  border: 1px solid var(--lv-line);
+  border-radius: var(--lv-radius);
+  font-size: 0.9rem;
+}
+.lv input::placeholder {
+  color: var(--lv-muted);
+  opacity: 1;
+}
+.lv input:focus {
+  border-color: var(--lv-accent);
+  outline: none;
+}
+.lv-badge {
+  max-width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--lv-line);
+  border-radius: var(--lv-radius);
+  font-family: var(--lv-mono);
+  font-size: 0.7rem;
+  color: var(--lv-muted);
+}
+.lv-badge.watching {
+  border-color: var(--lv-accent);
+  color: var(--lv-accent);
+}
+.lv-badge.seen {
+  background: var(--lv-seen);
+  border-color: var(--lv-seen);
+  color: var(--lv-accent-ink);
+  font-weight: 600;
+}
+.lv-badge.error {
+  border-color: var(--lv-live);
+  color: var(--lv-live);
+}
+.lv .lv-say button {
+  height: 2.4rem;
+  padding: 0 0.9rem;
+  background: var(--lv-text);
+  color: var(--lv-bg);
+  border-radius: var(--lv-radius);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.lv .lv-say button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.lv-controls {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem;
+}
+.lv .lv-mic {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--lv-text);
+  color: var(--lv-bg);
+}
+.lv-mic svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.lv .lv-mic.live {
+  background: var(--lv-live);
+  color: #fff;
+}
+.lv-ring {
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--lv-live);
+  border-radius: 50%;
+  opacity: 0;
+}
+.lv-mic.live .lv-ring {
+  animation: lv-ring 1.6s ease-out infinite;
+}
+@keyframes lv-ring {
+  from { opacity: 0.8; transform: scale(0.9); }
+  to { opacity: 0; transform: scale(1.35); }
+}
+.lv-hint {
+  font-family: var(--lv-mono);
+  font-size: 0.78rem;
+  color: var(--lv-muted);
+}
+.lv-hint.err {
+  color: var(--lv-live);
+}
+
+@media (max-width: 860px) {
+  .lv {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lv-viewfinder {
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lv *,
+  .lv *::before,
+  .lv *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
