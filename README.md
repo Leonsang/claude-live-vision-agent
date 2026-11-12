@@ -62,6 +62,9 @@ npm run dev
 Open <http://localhost:8000>, tap the mic, hold something up and ask
 *“what is this?”*
 
+`npm test` runs the server handlers against a fake Anthropic client — no key,
+no network.
+
 > Camera and mic need a secure context. `localhost` is fine; from a phone, use
 > an https tunnel.
 
@@ -110,6 +113,7 @@ src/server/protocol.ts   wire types and input validation
 src/react/LiveVision.tsx camera → canvas → JPEG → base64, snapshot vs stream, voice
 src/react/styles.css     default skin, all tokens overridable
 vite.config.ts           standalone demo: page + API in one dev server
+tests/handlers.test.mjs  the handlers against a fake client
 ```
 
 ## The one idea

@@ -32,12 +32,13 @@
 .lv *::after {
   box-sizing: border-box;
 }
-.lv button,
-.lv input {
+/* Resets sit in :where() so they never outrank a component rule. */
+:where(.lv) button,
+:where(.lv) input {
   font: inherit;
   color: inherit;
 }
-.lv button {
+:where(.lv) button {
   cursor: pointer;
   border: 0;
   background: none;
@@ -339,21 +340,25 @@
   font-weight: 600;
 }
 .lv .lv-fps button.on {
-  color: var(--lv-text);
-  background: var(--lv-sunk);
+  background: var(--lv-text);
+  color: var(--lv-bg);
+}
+.lv .lv-mode-watch.on .lv-fps button.on {
+  background: var(--lv-accent-ink);
+  color: var(--lv-accent);
 }
 
 .lv-pipeline {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.3rem 0;
   padding: 0.85rem 1rem;
 }
 .lv-node {
   font-family: var(--lv-mono);
-  font-size: 0.68rem;
-  padding: 0.2rem 0.4rem;
+  font-size: 0.64rem;
+  padding: 0.2rem 0.32rem;
   border: 1px solid var(--lv-line);
   border-radius: var(--lv-radius);
   color: var(--lv-muted);
@@ -361,13 +366,13 @@
 }
 .lv-node + .lv-node {
   position: relative;
-  margin-left: 0.7rem;
+  margin-left: 0.95rem;
 }
 .lv-node + .lv-node::before {
   content: '→';
   position: absolute;
   left: -0.85rem;
-  color: var(--lv-line);
+  color: var(--lv-muted);
 }
 .lv-node.lit {
   background: var(--lv-accent);
